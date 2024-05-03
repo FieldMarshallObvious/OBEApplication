@@ -2,39 +2,43 @@ from manim import *
 import random
 
 class ProgressBar(VGroup):
-    def __init__(self, completed_color = GREEN, failed_color = RED, task_title="", rectangle_height = 0.5, failures=3, max_steps=10,**kwargs):
-        super().__init__(**kwargs) 
-
-        self.rectangle_height = rectangle_height
+    def __init__(self, completed_color=GREEN, failed_color=RED, task_title="", rectangle_height=0.5, failures=3, max_steps=10, **kwargs):
+        super().__init__(**kwargs)
         self.completed_color = completed_color
         self.failed_color = failed_color
-
-        bar_outline = Rectangle(width=6, height=rectangle_height, color=WHITE)
-        bar_outline.set_fill(BLACK, opacity=1)
-
-        # Initialize the progress bar with a very small fill
-        initial_fill = Rectangle(width=0.1, height=rectangle_height, color=WHITE)
-        initial_fill.set_fill(WHITE, opacity=1)
-        initial_fill.set_stroke(width=0)
-        initial_fill.next_to(bar_outline.get_left(), RIGHT, buff=0)
-
-        # Create text
-        task_text = Text(task_title).next_to(ORIGIN, LEFT)
-
-        bar_outline.next_to(task_text, RIGHT, buff=0.5)
-        initial_fill.next_to(bar_outline.get_left(), RIGHT, buff=0)
-        self.current_fill = initial_fill
-        self.initial_fill = initial_fill
-        self.bar_outline = bar_outline
-        self.task_text = task_text
-        self.add(self.current_fill)
-        self.add(initial_fill)
-        self.add(bar_outline)
-        self.add(task_text)
-        self.current_width = 0.1
+        self.task_title = task_title
+        self.rectangle_height = rectangle_height
         self.failures = failures
         self.max_steps = max_steps
-        self.failure_point = random.randint(0, max_steps-1)
+        self.current_width = 0
+
+        self.setup_bar_outline()
+        self.setup_initial_fill()
+        self.setup_text()
+        self.setup_structure()
+
+        self.failure_point = random.randint(0, max_steps - 1)
+
+    def setup_bar_outline(self):
+        self.bar_outline = Rectangle(width=6, height=self.rectangle_height, color=WHITE)
+        self.bar_outline.set_fill(BLACK, opacity=1)
+        self.add(self.bar_outline)
+
+    def setup_initial_fill(self):
+        self.initial_fill = Rectangle(width=0.1, height=self.rectangle_height, color=WHITE)
+        self.initial_fill.set_fill(WHITE, opacity=1)
+        self.initial_fill.set_stroke(width=0)
+        self.current_fill = self.initial_fill
+        self.add(self.current_fill)
+
+    def setup_text(self):
+        self.task_text = Text(self.task_title).next_to(ORIGIN, LEFT)
+        self.add(self.task_text)
+
+    def setup_structure(self):
+        self.task_text.next_to(ORIGIN, LEFT)
+        self.bar_outline.next_to(self.task_text, RIGHT, buff=0.5)
+        self.initial_fill.next_to(self.bar_outline.get_left(), RIGHT, buff=0)
 
 
 class ProgressBarComplete(Animation):
@@ -113,7 +117,7 @@ class CustomProgressBar(Scene):
             except Exception as e:
                 logger.error(f"Error creating ProgressBar for '{task_title}': {e}")
 
-        self.play(AnimationGroup(*animations, run_time=5))
+        #self.play(AnimationGroup(*animations, run_time=5))
         self.wait(1)
 
     def create_progress_bar(self, task_title: str, location: int):
