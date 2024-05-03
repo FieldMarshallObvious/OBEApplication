@@ -105,7 +105,7 @@ class CustomProgressBar(Scene):
                 adjusted_location = len(tasks) - location 
                 bar = ProgressBar(task_title=task_title)
                 bar.shift(UP*adjusted_location)
-                bar.add_updater(check_bar)
+                #bar.add_updater(check_bar)
                 progressBars.append(bar)
                 self.add(bar)
                 self.play(
