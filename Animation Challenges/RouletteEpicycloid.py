@@ -130,7 +130,7 @@ class Hard(Scene):
                 x = dot.get_center()[0]
                 y = dot.get_center()[1]
 
-                if self.run_time < animation_time - 1.9*self.last_dt:
+                if self.run_time < animation_time - 2.1*self.last_dt:
                     new_line = Line(last_line.get_end(),np.array([x,y,0]), color=RED)
                     self.curve.add(new_line)
 
@@ -169,3 +169,8 @@ class Hard(Scene):
                 FadeOut(dot)
             )
             self.wait(2)
+        self.play(
+            Uncreate(ax),
+            Uncreate(large_circle)
+        )
+        self.wait(2)
